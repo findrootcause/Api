@@ -35,8 +35,8 @@ def datacleaning(path):
             continue'''
         for one_data in event:
             nodename = one_data['triggername'].split()[0][2:]
-            if one_data['is_root'] == "1":
-                root_node=nodename
+            #if one_data['is_root'] == "1":
+            #   root_node=nodename
             cause = "".join(one_data['triggername'].split()[1:])
             if nodename not in node_times:
                 node_times[nodename] = 1
@@ -145,4 +145,4 @@ def datacleaning(path):
             #plt.cla()
         the_sys_dict['node_detail'] = w_node_labels
         all_json.append(the_sys_dict)
-    return all_json
+    return train_datas,all_json
