@@ -13,9 +13,6 @@ class DataCleanView(APIView):
 
     def get(self, request):
         datacleandata, dataclean_json = datacleaning('E:/软件杯2020/data_release/test/')
-        sysanalysis_json = sysanalysis(datacleandata, dataclean_json)
-        findrootnode_json = findrootnode(dataclean_json, sysanalysis_json)
-        findcause_json = findcause(datacleandata, findrootnode_json)
         return Response(dataclean_json)
 
 
@@ -35,7 +32,6 @@ class Findrootnode(APIView):
         datacleandata, dataclean_json = datacleaning('E:/软件杯2020/data_release/test/')
         sysanalysis_json = sysanalysis(datacleandata, dataclean_json)
         findrootnode_json = findrootnode(dataclean_json, sysanalysis_json)
-        findcause_json = findcause(datacleandata, findrootnode_json)
         return Response(findrootnode_json)
 
 
@@ -44,6 +40,4 @@ class Sysanalysis(APIView):
     def get(self, request):
         datacleandata, dataclean_json = datacleaning('E:/软件杯2020/data_release/test/')
         sysanalysis_json = sysanalysis(datacleandata, dataclean_json)
-        findrootnode_json = findrootnode(dataclean_json, sysanalysis_json)
-        findcause_json = findcause(datacleandata, findrootnode_json)
         return Response(sysanalysis_json)
