@@ -6,12 +6,11 @@ def datacleaning(path):
     train_datas = list()
     filePath = path
     csv_name = os.listdir(filePath)
-    csv_name.sort(key=lambda x:int(x[:-4]))
 
     for filename in csv_name:
         csv_data = []
         train_data = []
-        with open(filePath+filename,"r", encoding='UTF-8') as fp:
+        with open(filePath+'/'+filename,"r", encoding='UTF-8') as fp:
             csv_data = csv.DictReader(fp)
             for i in csv_data:
                 train_data.append(i)
@@ -145,4 +144,4 @@ def datacleaning(path):
             #plt.cla()
         the_sys_dict['node_detail'] = w_node_labels
         all_json.append(the_sys_dict)
-    return train_datas,all_json
+    return train_datas,all_json,csv_name

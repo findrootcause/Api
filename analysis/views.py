@@ -13,10 +13,14 @@ from analysis.Findrootcause import *
 class DataCleanView(APIView):
 
     def get(self, request):
-        datacleandata, dataclean_json = datacleaning('E:/软件杯2020/Api/upload/1/')
+        path = os.path.join(os.getcwd(), ".")+'/upload/now/'
+        datacleandata, dataclean_json,csv_name = datacleaning(os.path.abspath(path))
         node_json = {"datacleandata":datacleandata,
-                     "dataclean_json":dataclean_json
+                     "dataclean_json":dataclean_json,
+                     "csv_name":csv_name
                      }
+        shutil.rmtree(path)
+        os.mkdir(path)
         return Response(node_json)
 
 #系统关系分析
@@ -52,9 +56,16 @@ class FindrootcauseView(APIView):
 class MoreanalysisView(APIView):
 
     def get(self, request):
-        datacleandata, dataclean_json = datacleaning('E:/软件杯2020/data_release/test/')
+        path = os.path.join(os.getcwd(), ".")+'/upload/now/'
+        datacleandata, dataclean_json,csv_name = datacleaning(os.path.abspath(path))
         sysanalysis_json = sysanalysis(datacleandata, dataclean_json)
         findrootnode_json = findrootnode(dataclean_json, sysanalysis_json)
         findcause_json = findcause(datacleandata, findrootnode_json)
-        return Response(findcause_json)
+        shutil.rmtree(path)
+        os.mkdir(path)
+        json = {"findrootnode_json":findrootnode_json,
+                "findcause_json":findcause_json,
+                "csv_name":csv_name
+                }
+        return Response(json)
 
