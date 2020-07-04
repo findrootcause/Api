@@ -3,9 +3,9 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('DataCleanView/', views.DataCleanView.as_view()),
-    path('Findrootcause/', views.Findrootcause.as_view()),
-    path('Findrootnode/', views.Findrootnode.as_view()),
-    path('Sysanalysis/', views.Sysanalysis.as_view()),
-
+    path('dataclean/', views.DataCleanView.as_view()),
+    path('sysanalysis/', views.SysanalysisView.as_view()),
+    path('findrootnode/', views.FindrootnodeView.as_view()),
+    path('findrootcause/', views.FindrootcauseView.as_view()),
+    path('moreanalysis/',views.MoreanalysisView.as_view()),
 ]
