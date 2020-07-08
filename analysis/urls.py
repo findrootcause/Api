@@ -8,4 +8,5 @@ urlpatterns = [
     path('findrootnode/', views.FindrootnodeView.as_view()),
     path('findrootcause/', views.FindrootcauseView.as_view()),
     path('moreanalysis/',views.MoreanalysisView.as_view()),
+    path('partvisualization/',views.PartvisualizationView.as_view()),
 ]

@@ -8,6 +8,7 @@ from analysis.Datacleaning import *
 from analysis.Sysanalysis import *
 from analysis.Findrootnode import *
 from analysis.Findrootcause import *
+from analysis.Partvisualization import *
 
 #数据清理
 class DataCleanView(APIView):
@@ -51,6 +52,17 @@ class FindrootcauseView(APIView):
         findrootnode_json = request.data.get("findrootnode_json")
         findcause_json = findcause(datacleandata, findrootnode_json)
         return Response(findcause_json)
+
+#根因局部可视化
+class PartvisualizationView(APIView):
+
+    def post(self, request):
+        nodedetail = request.data.get("nodedetail")
+        rootnode = request.data.get("rootnode")
+        rootcause = request.data.get("rootcause")
+        node,edge = partvisualization(nodedetail,rootnode,rootcause)
+        result = {"node":node,"edge":edge}
+        return Response(result)
 
 #批量分析
 class MoreanalysisView(APIView):

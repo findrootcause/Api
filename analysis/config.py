@@ -7,10 +7,11 @@ import os
 import csv
 import shutil
 
-
+'''
 # 设置matplotlib正常显示中文和负号
 matplotlib.rcParams['font.sans-serif']=['SimHei']   # 用黑体显示中文
 matplotlib.rcParams['axes.unicode_minus']=False     # 正常显示负号
+'''
 
 #数据写入
 sysfile = "E:/软件杯2020/data_release/topology/topology_edges_sys.json"
