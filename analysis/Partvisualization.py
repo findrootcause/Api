@@ -30,7 +30,7 @@ def partvisualization(nodedetail,rootnode,rootcause):
                   'border': 'yellow',
                   'background': 'yellow',
                 },
-            'title': '<span>告警信息种类数：</span>'+kinds+"<br>"+"<span>告警信息：次数：</span><br>"+kind+"<br><span>一共告警次数：</span>"+times+"<span>次</span>",
+            'title': '<span>告警信息种类数：</span>'+kinds+"<br>"+"<span>告警信息：次数：</span><br>"+kind+"<br><span>本次事件权重：</span>"+times+"<span>次</span>",
             'size':100
             })
         else:
