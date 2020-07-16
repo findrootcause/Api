@@ -6,12 +6,11 @@ def datacleaning(path):
     train_datas = list()
     filePath = path
     csv_name = os.listdir(filePath)
-    csv_name.sort(key=lambda x:int(x[:-4]))
-
+    csv_name.sort(key = lambda x: int(x[:-4]))
     for filename in csv_name:
         csv_data = []
         train_data = []
-        with open(filePath+filename,"r", encoding='UTF-8') as fp:
+        with open(filePath+'/'+filename,"r", encoding='UTF-8') as fp:
             csv_data = csv.DictReader(fp)
             for i in csv_data:
                 train_data.append(i)
@@ -28,7 +27,7 @@ def datacleaning(path):
         root_node = ""
         """
         node_kinds ={
-            "name":{"xxx","xxx"}
+            "name":{"xxx":times,"xxx":times}
         }
         """
         '''if not haveroot(event) : 
@@ -40,16 +39,19 @@ def datacleaning(path):
             cause = "".join(one_data['triggername'].split()[1:])
             if nodename not in node_times:
                 node_times[nodename] = 1
-                node_kinds[nodename] = set()
-                node_kinds[nodename].add(cause)
+                node_kinds[nodename] = dict()
+                node_kinds[nodename][cause] = 1
             else:
                 node_times[nodename] += 1
-                node_kinds[nodename].add(cause)
+                if cause not in node_kinds[nodename]:
+                    node_kinds[nodename][cause] = 1
+                else:
+                    node_kinds[nodename][cause] += 1
         z = list()
         for num in node_times.values():
-            z.append(normalization(num,node_times))
+           z.append(normalization(num,node_times))
         for index,i in enumerate(node_times):
-            node_times[i] = z[index]
+           node_times[i] = z[index]
 
         the_sys_dict = dict()
         w_node_labels = dict()
@@ -57,13 +59,13 @@ def datacleaning(path):
         for index,nodesname in enumerate(sys_node_json.keys()):
             the_first = 0
             the_sys_link = {nodesname:[]}
-            color_map = []
+            #color_map = []
             nodes = sys_node_json[nodesname]
             first_nodes = set()
             second_nodes = set()
             third_nodes = set()
             four_nodes = set()
-            node_labels = {}
+            #node_labels = {}
             pos = dict()
             G = nx.DiGraph()
             G.clear()
@@ -72,17 +74,18 @@ def datacleaning(path):
                     G.add_edge(node,next_node)
             for node in G.nodes:
                 if node in node_times:
-                    color_map.append(RGB_to_Hex(node_times[node]))
+                    #color_map.append(RGB_to_Hex(node_times[node]))
                     if node ==  root_node:
-                       node_labels[node] = "ROOT"+str(len(node_kinds[node]))+"__"+node
+                       #node_labels[node] = "ROOT"+str(len(node_kinds[node]))+"__"+node
                        if node_times[node] != 0 :
-                           w_node_labels[node] = {"kinds":str(len(node_kinds[node])),"times":node_times[node],'root':1}
+                           w_node_labels[node] = {"kinds":str(len(node_kinds[node])),"kind":node_kinds[node],"times":node_times[node],'root':1}
                     else:
-                        node_labels[node] = str(len(node_kinds[node]))+"__"+node
+                        #node_labels[node] = str(len(node_kinds[node]))+"__"+node
                         if node_times[node] != 0 :
-                            w_node_labels[node] = {"kinds":str(len(node_kinds[node])),'root':0}
+                            w_node_labels[node] = {"kinds":str(len(node_kinds[node])),"kind":node_kinds[node],"times":node_times[node],'root':0}
                 else:
-                    color_map.append('blue')
+                    #color_map.append('blue')
+                    pass
             #将sys内nodes归类
             for node in nodes:
                 if G.in_degree(node) == 0:
@@ -95,8 +98,6 @@ def datacleaning(path):
                                 four_nodes.add(d)
                                 if G.edges(d):
                                     print(1)
-
-
             np_node_times = np.array([ x   for x in node_times.keys() if node_times[x]>0 ])
             np_first = np.array(list(first_nodes))
             np_second = np.array(list(second_nodes))
@@ -143,6 +144,7 @@ def datacleaning(path):
             #plt.show()
             #plt.savefig(str(Index)+'/'+str(index+1)+".png")
             #plt.cla()
+            
         the_sys_dict['node_detail'] = w_node_labels
         all_json.append(the_sys_dict)
-    return train_datas,all_json
+    return train_datas,all_json,csv_name

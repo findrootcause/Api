@@ -8,12 +8,76 @@ from analysis.Datacleaning import *
 from analysis.Sysanalysis import *
 from analysis.Findrootnode import *
 from analysis.Findrootcause import *
+from analysis.Partvisualization import *
 
+#数据清理
 class DataCleanView(APIView):
-    
-    def get(self,request):
-        datacleandata,dataclean_json = datacleaning('E:/软件杯2020/data_release/test/')
-        sysanalysis_json = sysanalysis(datacleandata,dataclean_json)
-        findrootnode_json = findrootnode(dataclean_json,sysanalysis_json)
-        findcause_json = findcause(datacleandata,findrootnode_json)
+
+    def get(self, request):
+        path = os.path.join(os.getcwd(), ".")+'/upload/now/'
+        datacleandata, dataclean_json,csv_name = datacleaning(os.path.abspath(path))
+        node_json = {"datacleandata":datacleandata,
+                     "dataclean_json":dataclean_json,
+                     "csv_name":csv_name
+                     }
+        shutil.rmtree(path)
+        os.mkdir(path)
+        return Response(node_json)
+
+#系统关系分析
+class SysanalysisView(APIView):
+
+    def post(self, request):
+        #datacleandata, dataclean_json = datacleaning('E:/软件杯2020/data_release/test/')
+        datacleandata = request.data.get("datacleandata")
+        dataclean_json = request.data.get("dataclean_json")
+        sysanalysis_json = sysanalysis(datacleandata, dataclean_json)
+        return Response(sysanalysis_json)
+
+#找到根因结点
+class FindrootnodeView(APIView):
+
+    def post(self, request):
+        #sysanalysis_json = sysanalysis(datacleandata, dataclean_json)
+        dataclean_json = request.data.get("dataclean_json")
+        sysanalysis_json = request.data.get("sysanalysis_json")
+        findrootnode_json = findrootnode(dataclean_json, sysanalysis_json)
+        return Response(findrootnode_json)
+
+#找到根因
+class FindrootcauseView(APIView):
+
+    def post(self, request):
+        datacleandata = request.data.get("datacleandata")
+        findrootnode_json = request.data.get("findrootnode_json")
+        findcause_json = findcause(datacleandata, findrootnode_json)
         return Response(findcause_json)
+
+#根因局部可视化
+class PartvisualizationView(APIView):
+
+    def post(self, request):
+        nodedetail = request.data.get("nodedetail")
+        rootnode = request.data.get("rootnode")
+        rootcause = request.data.get("rootcause")
+        node,edge = partvisualization(nodedetail,rootnode,rootcause)
+        result = {"node":node,"edge":edge}
+        return Response(result)
+
+#批量分析
+class MoreanalysisView(APIView):
+
+    def get(self, request):
+        path = os.path.join(os.getcwd(), ".")+'/upload/now/'
+        datacleandata, dataclean_json,csv_name = datacleaning(os.path.abspath(path))
+        sysanalysis_json = sysanalysis(datacleandata, dataclean_json)
+        findrootnode_json = findrootnode(dataclean_json, sysanalysis_json)
+        findcause_json = findcause(datacleandata, findrootnode_json)
+        shutil.rmtree(path)
+        os.mkdir(path)
+        json = {"findrootnode_json":findrootnode_json,
+                "findcause_json":findcause_json,
+                "csv_name":csv_name
+                }
+        return Response(json)
+
